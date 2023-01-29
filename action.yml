@@ -1,5 +1,5 @@
 name: Docker Compose Remote (SSH) Deploy
-description: An action that uses SSH (with tunnel, optional) to deploy via `docker compose up` or `docker stack deploy` with no dependencies
+description: The action uses SSH (with tunnel, optional) to deploy using `docker compose up` or `docker stack deploy` on remote host
 branding:
   icon: server
   color: blue
