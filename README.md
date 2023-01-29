@@ -1,52 +1,51 @@
 # Docker Compose Remote Action
 
-This actions deploys your docker-compose stack file to remote host where docker-compose does not even have to be installed.
+This action packs contents of the action workspace into archive.
+Logs into remote host via ssh. Unpacks the workspace there and runs
+`docker compose up -d` command.
 
 ## Inputs
 
-### `ssh_host`
-Remote host where docker is running
+* `ssh_user` - Remote user which should have access to docker.
+* `ssh_host` - Remote host name.
+* `ssh_port` - Remote port for SSH connection. Default is 22.
+* `ssh_jump_host` - Jump host name.
+* `ssh_private_key` - Private SSH key used for logging into remote system. Please, keep your key securely in GitHub secrets.
+* `ssh_host_public_key` - Remote host SSH public key (The content of `~/.ssh/known_hosts` needs to be given here).
+* `ssh_jump_public_key` - Jump host SSH public key (The content of `~/.ssh/known_hosts` needs to be given here).
+* `docker_compose_prefix` - Project name passed to compose. Each docker container will have this prefix in name.
+* `docker_compose_filename` - Path to the docker-compose file in the repository.
+* `docker_use_stack` - Use docker stack instead of docker-compose.
+* `docker_env` - Docker Environment variables.
+* `workspace` - A project directory to use.
+* `workspace_keep` - Whether to keep the workspace directory after the action has finished.
 
-### `ssh_port`
-SSH port on remote host
+# Usage example
 
-### `ssh_user`
-SSH user on remote host
+Let's say we have a repo with single docker-compose file in it and remote
+ubuntu based server with docker and docker-compose installed.
 
-### `ssh_key`
-SSH private key used to access to remote server. 
-Better save it into repository secrets.
+Setup a github-actions workflow (e.g. `.github/workflows/main.yml`):
 
-### `compose_file`
-*Optional.* Docker compose filename. Default: `docker-compose.yml`
+```
+name: Deploy
 
-### `service`
-*Optional.* Name of service to be deployed. By default all services are deployed.
+on:
+  push:
+    branches: [ master ]
 
-### `force_recreate`
-*Optional.* Recreate containers even if compose file did not change. Default: false
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
 
-### `pull`
-*Optional.* Pull docker images before deploying. Default: false
+    steps:
+    - uses: actions/checkout@v3
 
-### `build`
-*Optional.* Build docker images before deploying. Default: false
-
-### `options`
-*Optional.* Pass additional options to docker-compose. For example: `--no-deps`
-
-## Example usage
-
-```yaml
-steps:
-  # need checkout before using docker-compose-remote-action
-  - uses: actions/checkout@v2
-  - uses: chaplyk/docker-compose-remote-action@v1.1
-    with:
-      ssh_host: 127.0.0.1
-      ssh_user: username
-      ssh_key: ${{ secrets.SSH_KEY }}
-      compose_file: docker-compose.yml
-      pull: true
-      build: true
+    - uses: astappiev/docker-compose-remote-action@master
+      name: Docker-Compose Remote Deployment
+      with:
+        ssh_host: example.com
+        ssh_private_key: ${{ secrets.EXAMPLE_COM_SSH_PRIVATE_KEY }}
+        ssh_user: ${{ secrets.EXAMPLE_COM_SSH_USER }}
+        docker_compose_prefix: example_com
 ```

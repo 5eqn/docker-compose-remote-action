@@ -1,40 +1,76 @@
-name: Docker Compose Remote Deploy
-author: Bohdan Chaplyk <bogdan.chaplyk@gmail.com>
-description: 'Deploy docker-compose with remote docker context'
+name: Docker Compose Remote (SSH) Deploy
+description: An action that uses SSH (with tunnel, optional) to deploy via `docker compose up` or `docker stack deploy` with no dependencies
+branding:
+  icon: server
+  color: blue
 inputs:
-  ssh_key:
-    description: SSH private key used to connect to the docker host
-    required: true
-  ssh_user:
-    description: SSH user
-    required: true
   ssh_host:
-    description: Remote host where docker is running
+    description: Remote host name.
     required: true
   ssh_port:
-    description: Remote port to use, defaults at 22
+    description: Remote SSH port.
+    default: '22'
+    required: true
+  ssh_user:
+    description: Remote user name.
+    required: true
+  ssh_jump_host:
+    description: Jump host name.
+  ssh_private_key:
+    description: Private SSH key used for logging into remote system.
+    required: true
+  ssh_host_public_key:
+    description: Remote host SSH public key (The content of `~/.ssh/known_hosts` needs to be given here).
+    required: true
+  ssh_jump_public_key:
+    description: Jump host SSH public key (The content of `~/.ssh/known_hosts` needs to be given here).
+    required: true
+  docker_compose_prefix:
+    description: Prefix for docker compose containers.
+    required: true
+  docker_compose_filename:
+    description: Docker compose file to use.
+    default: docker-compose.yml
+  docker_use_stack:
+    description: Use docker stack instead of docker compose ("true" or "false").
+    default: 'false'
+  docker_env:
+    description: Docker Environment variables.
     required: false
-  compose_file:
-    description: Docker compose filename.
+  workspace:
+    description: A project directory to use.
+    default: 'workspace'
     required: false
-  force_recreate:
-    description: Recreate containers even if compose file did not change
+  workspace_keep:
+    description: Whether to keep the workspace directory after the action has finished.
+    default: 'false'
     required: false
-  pull:
-    description: Pull docker images before deploying
+  container_registry:
+    description: Container registry server to use.
     required: false
-  build:
-    description: Build docker images before deploying
+  container_registry_username:
+    description: Container registry username to use.
     required: false
-  options:
-    description: Pass additional options to docker-compose
-    required: false
-  service:
-    description: Name of service to be deployed
+  container_registry_password:
+    description: Container registry password to use.
     required: false
 runs:
   using: docker
   image: Dockerfile
-branding:
-  icon: anchor
-  color: blue
+  env:
+    SSH_USER: ${{ inputs.ssh_user }}
+    SSH_HOST: ${{ inputs.ssh_host }}
+    SSH_PORT: ${{ inputs.ssh_port }}
+    SSH_JUMP_HOST: ${{ inputs.ssh_jump_host }}
+    SSH_PRIVATE_KEY: ${{ inputs.ssh_private_key }}
+    SSH_HOST_PUBLIC_KEY: ${{ inputs.ssh_host_public_key }}
+    SSH_JUMP_PUBLIC_KEY: ${{ inputs.ssh_jump_public_key }}
+    DOCKER_COMPOSE_FILENAME: ${{ inputs.docker_compose_filename }}
+    DOCKER_COMPOSE_PREFIX: ${{ inputs.docker_compose_prefix }}
+    DOCKER_USE_STACK: ${{ inputs.docker_use_stack }}
+    DOCKER_ENV: ${{ inputs.docker_env }}
+    WORKSPACE: ${{ inputs.workspace }}
+    WORKSPACE_KEEP: ${{ inputs.workspace_keep }}
+    CONTAINER_REGISTRY: ${{ inputs.container_registry }}
+    CONTAINER_REGISTRY_USERNAME: ${{ inputs.container_registry_username }}
+    CONTAINER_REGISTRY_PASSWORD: ${{ inputs.container_registry_password }}
