@@ -50,8 +50,8 @@ inputs:
     description: Container registry password to use.
 runs:
   using: docker
-  image: Dockerfile
-#  image: docker://astappev/docker-compose-remote-action:latest
+#  image: Dockerfile
+  image: docker://astappev/docker-compose-remote-action:latest
   env:
     SSH_USER: ${{ inputs.ssh_user }}
     SSH_HOST: ${{ inputs.ssh_host }}
