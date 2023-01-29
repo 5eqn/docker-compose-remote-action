@@ -37,13 +37,21 @@ if [ -z "$DOCKER_COMPOSE_FILENAME" ]; then
   DOCKER_COMPOSE_FILENAME=docker-compose.yml
 fi
 
-if [ -z "$DOCKER_COMPOSE_PREFIX" ]; then
-  echo "Input docker_compose_prefix is required!"
-  exit 1
+if [ -z "$DOCKER_ARGS" ]; then
+  DOCKER_ARGS="-d --remove-orphans --build"
 fi
 
 if [ -z "$DOCKER_USE_STACK" ]; then
   DOCKER_USE_STACK=false
+else
+  if [ -z "$DOCKER_COMPOSE_PREFIX" ]; then
+    echo "Input docker_compose_prefix is required!"
+    exit 1
+  fi
+
+  if [ -z "$DOCKER_ARGS" ]; then
+    DOCKER_ARGS=""
+  fi
 fi
 
 if [ -z "$DOCKER_ENV" ]; then
@@ -92,10 +100,13 @@ fi
 remote_path="\$HOME/$WORKSPACE"
 remote_cleanup=""
 remote_registry_login=""
-remote_exec="docker compose -f \"$DOCKER_COMPOSE_FILENAME\" -p \"$DOCKER_COMPOSE_PREFIX\" up -d --remove-orphans --build"
+remote_docker_exec="docker compose -f \"$DOCKER_COMPOSE_FILENAME\" up $DOCKER_ARGS"
+if [ -n "$DOCKER_COMPOSE_PREFIX" ]; then
+  remote_docker_exec="$remote_docker_exec -p \"$DOCKER_COMPOSE_PREFIX\""
+fi
 if $DOCKER_USE_STACK ; then
   remote_path="\$HOME/$WORKSPACE/$DOCKER_COMPOSE_PREFIX"
-  remote_exec="docker stack deploy -c \"$DOCKER_COMPOSE_FILENAME\" --prune \"$DOCKER_COMPOSE_PREFIX\""
+  remote_docker_exec="docker stack deploy -c \"$DOCKER_COMPOSE_FILENAME\" --prune \"$DOCKER_COMPOSE_PREFIX\" $DOCKER_ARGS"
 fi
 if ! $WORKSPACE_KEEP ; then
   remote_cleanup="cleanup() { log 'Removing workspace'; rm -rf \"$remote_path\"; }; trap cleanup EXIT;"
@@ -118,8 +129,9 @@ $remote_cleanup
 $remote_registry_login
 
 log 'Launching docker compose...';
+log 'Command \"$remote_docker_exec\"';
 cd \"$remote_path\";
-$DOCKER_ENV $remote_exec"
+$DOCKER_ENV $remote_docker_exec"
 
 ssh_jump=""
 if [ -n "$SSH_JUMP_HOST" ]; then

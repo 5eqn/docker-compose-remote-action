@@ -10,7 +10,6 @@ inputs:
   ssh_port:
     description: Remote SSH port.
     default: '22'
-    required: true
   ssh_user:
     description: Remote user name.
     required: true
@@ -24,40 +23,35 @@ inputs:
     required: true
   ssh_jump_public_key:
     description: Jump host SSH public key (The content of `~/.ssh/known_hosts` needs to be given here).
-    required: true
-  docker_compose_prefix:
-    description: Prefix for docker compose containers.
-    required: true
   docker_compose_filename:
     description: Docker compose file to use.
     default: docker-compose.yml
+  docker_compose_prefix:
+    description: Prefix for docker compose containers.
+  docker_args:
+    description: Docker compose command arguments.
+    default: '-d --remove-orphans --build'
   docker_use_stack:
     description: Use docker stack instead of docker compose ("true" or "false").
     default: 'false'
   docker_env:
     description: Docker Environment variables.
-    required: false
   workspace:
     description: A project directory to use.
     default: 'workspace'
-    required: false
   workspace_keep:
     description: Whether to keep the workspace directory after the action has finished.
     default: 'false'
-    required: false
   container_registry:
     description: Container registry server to use.
-    required: false
   container_registry_username:
     description: Container registry username to use.
-    required: false
   container_registry_password:
     description: Container registry password to use.
-    required: false
 runs:
   using: docker
-#  image: Dockerfile
-  image: docker://astappev/docker-compose-remote-action:latest
+  image: Dockerfile
+#  image: docker://astappev/docker-compose-remote-action:latest
   env:
     SSH_USER: ${{ inputs.ssh_user }}
     SSH_HOST: ${{ inputs.ssh_host }}
@@ -68,6 +62,7 @@ runs:
     SSH_JUMP_PUBLIC_KEY: ${{ inputs.ssh_jump_public_key }}
     DOCKER_COMPOSE_FILENAME: ${{ inputs.docker_compose_filename }}
     DOCKER_COMPOSE_PREFIX: ${{ inputs.docker_compose_prefix }}
+    DOCKER_ARGS: ${{ inputs.docker_args }}
     DOCKER_USE_STACK: ${{ inputs.docker_use_stack }}
     DOCKER_ENV: ${{ inputs.docker_env }}
     WORKSPACE: ${{ inputs.workspace }}
