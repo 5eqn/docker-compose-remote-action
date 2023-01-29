@@ -56,7 +56,8 @@ inputs:
     required: false
 runs:
   using: docker
-  image: Dockerfile
+#  image: Dockerfile
+  image: docker://astappev/docker-compose-remote-action:latest
   env:
     SSH_USER: ${{ inputs.ssh_user }}
     SSH_HOST: ${{ inputs.ssh_host }}
