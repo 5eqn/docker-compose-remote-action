@@ -1,4 +1,4 @@
-name: Docker Compose Remote (SSH) Deploy
+name: Docker Compose Remote (SSH) Sync and Deploy
 description: The action uses SSH (with tunnel, optional) to deploy using `docker compose up` or `docker stack deploy` on remote host
 branding:
   icon: server
