@@ -1,0 +1,72 @@
+name: Docker Compose Remote (SSH) Sync and Deploy
+description: The action uses SSH (with tunnel, optional) to deploy using `docker compose up` or `docker stack deploy` on remote host
+branding:
+  icon: server
+  color: blue
+inputs:
+  ssh_host:
+    description: Remote host name.
+    required: true
+  ssh_port:
+    description: Remote SSH port.
+    default: "22"
+  ssh_user:
+    description: Remote user name.
+    required: true
+  ssh_jump_host:
+    description: Jump host name.
+  ssh_private_key:
+    description: Private SSH key used for logging into remote system.
+    required: true
+  ssh_host_public_key:
+    description: Remote host SSH public key (The content of `~/.ssh/known_hosts` needs to be given here).
+    required: true
+  ssh_jump_public_key:
+    description: Jump host SSH public key (The content of `~/.ssh/known_hosts` needs to be given here).
+  docker_compose_filename:
+    description: Docker compose file to use.
+    default: docker-compose.yml
+  docker_compose_prefix:
+    description: Prefix for docker compose containers.
+  docker_args:
+    description: Docker compose command arguments.
+    default: "-d --remove-orphans --build"
+  docker_use_stack:
+    description: Use docker stack instead of docker compose ("true" or "false").
+    default: "false"
+  docker_env:
+    description: Docker Environment variables.
+  workspace:
+    description: A project directory to use.
+    default: "workspace"
+  workspace_keep:
+    description: Whether to keep the workspace directory after the action has finished.
+    default: "false"
+  container_registry:
+    description: Container registry server to use.
+  container_registry_username:
+    description: Container registry username to use.
+  container_registry_password:
+    description: Container registry password to use.
+runs:
+  using: docker
+  #  image: Dockerfile
+  image: docker://gliitchake/docker-cd:latest
+  env:
+    SSH_USER: ${{ inputs.ssh_user }}
+    SSH_HOST: ${{ inputs.ssh_host }}
+    SSH_PORT: ${{ inputs.ssh_port }}
+    SSH_JUMP_HOST: ${{ inputs.ssh_jump_host }}
+    SSH_PRIVATE_KEY: ${{ inputs.ssh_private_key }}
+    SSH_HOST_PUBLIC_KEY: ${{ inputs.ssh_host_public_key }}
+    SSH_JUMP_PUBLIC_KEY: ${{ inputs.ssh_jump_public_key }}
+    DOCKER_COMPOSE_FILENAME: ${{ inputs.docker_compose_filename }}
+    DOCKER_COMPOSE_PREFIX: ${{ inputs.docker_compose_prefix }}
+    DOCKER_ARGS: ${{ inputs.docker_args }}
+    DOCKER_USE_STACK: ${{ inputs.docker_use_stack }}
+    DOCKER_ENV: ${{ inputs.docker_env }}
+    WORKSPACE: ${{ inputs.workspace }}
+    WORKSPACE_KEEP: ${{ inputs.workspace_keep }}
+    CONTAINER_REGISTRY: ${{ inputs.container_registry }}
+    CONTAINER_REGISTRY_USERNAME: ${{ inputs.container_registry_username }}
+    CONTAINER_REGISTRY_PASSWORD: ${{ inputs.container_registry_password }}
