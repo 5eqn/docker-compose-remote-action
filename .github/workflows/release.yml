@@ -1,6 +1,8 @@
 name: "Release"
 
-on: create
+on:
+  push:
+    branches: ["master"]
 
 jobs:
   release:
