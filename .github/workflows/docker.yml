@@ -10,7 +10,7 @@ on: create
 env:
   # Use docker.io for Docker Hub if empty
   REGISTRY: docker.io
-  IMAGE_NAME: ${{ '5eqn/docker-cd' }}
+  IMAGE_NAME: ${{ 'gliitchake/docker-cd' }}
 
 jobs:
   build:
