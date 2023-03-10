@@ -80,7 +80,7 @@ cleanup() {
 trap cleanup EXIT
 
 log "Packing workspace into archive to transfer onto remote machine"
-tar cjvf /tmp/workspace.tar.bz2 --exclude .git .
+tar cjvf /tmp/workspace.tar.bz2 $DOCKER_COMPOSE_FILENAME
 
 log "Registering SSH keys"
 mkdir -p "$HOME/.ssh"
