@@ -9,7 +9,7 @@ inputs:
     required: true
   ssh_port:
     description: Remote SSH port.
-    default: '22'
+    default: "22"
   ssh_user:
     description: Remote user name.
     required: true
@@ -30,18 +30,18 @@ inputs:
     description: Prefix for docker compose containers.
   docker_args:
     description: Docker compose command arguments.
-    default: '-d --remove-orphans --build'
+    default: "-d --remove-orphans --build"
   docker_use_stack:
     description: Use docker stack instead of docker compose ("true" or "false").
-    default: 'false'
+    default: "false"
   docker_env:
     description: Docker Environment variables.
   workspace:
     description: A project directory to use.
-    default: 'workspace'
+    default: "workspace"
   workspace_keep:
     description: Whether to keep the workspace directory after the action has finished.
-    default: 'false'
+    default: "false"
   container_registry:
     description: Container registry server to use.
   container_registry_username:
@@ -50,8 +50,8 @@ inputs:
     description: Container registry password to use.
 runs:
   using: docker
-#  image: Dockerfile
-  image: docker://astappev/docker-compose-remote-action:latest
+  #  image: Dockerfile
+  image: docker://gliitchake/docker-cd:latest
   env:
     SSH_USER: ${{ inputs.ssh_user }}
     SSH_HOST: ${{ inputs.ssh_host }}
