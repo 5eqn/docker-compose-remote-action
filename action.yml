@@ -51,7 +51,7 @@ inputs:
 runs:
   using: docker
   #  image: Dockerfile
-  image: "docker://gliitchake/docker-cd:latest"
+  image: "docker://gliitchake/docker-cd:master"
   env:
     SSH_USER: ${{ inputs.ssh_user }}
     SSH_HOST: ${{ inputs.ssh_host }}
