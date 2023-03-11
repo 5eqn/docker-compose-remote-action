@@ -101,9 +101,9 @@ remote_path="\$HOME/$WORKSPACE"
 remote_cleanup=""
 remote_registry_login=""
 docker_prefix="docker compose -f \"$DOCKER_COMPOSE_FILENAME\""
-remote_docker_exec="$docker_prefix pull $DOCKER_ARGS && $docker_prefix up $DOCKER_ARGS"
+remote_docker_exec="$docker_prefix pull && $docker_prefix up $DOCKER_ARGS"
 if [ -n "$DOCKER_COMPOSE_PREFIX" ]; then
-  remote_docker_exec="$docker_prefix pull $DOCKER_ARGS && $docker_prefix -p \"$DOCKER_COMPOSE_PREFIX\" up $DOCKER_ARGS"
+  remote_docker_exec="$docker_prefix pull && $docker_prefix -p \"$DOCKER_COMPOSE_PREFIX\" up $DOCKER_ARGS"
 fi
 if $DOCKER_USE_STACK ; then
   remote_path="\$HOME/$WORKSPACE/$DOCKER_COMPOSE_PREFIX"
