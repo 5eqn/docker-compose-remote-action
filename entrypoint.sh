@@ -140,6 +140,6 @@ fi
 
 echo ">> [local] Connecting to remote host."
 ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
-  "$ssh_jump" "$SSH_USER@$SSH_HOST" -p "$SSH_PORT" \
+  $ssh_jump "$SSH_USER@$SSH_HOST" -p "$SSH_PORT" \
   "$remote_command" \
   < /tmp/workspace.tar.bz2
