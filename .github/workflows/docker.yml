@@ -8,7 +8,7 @@ name: Docker
 on:
   push:
     branches: ["master"]
-  create
+  create:
 
 env:
   # Use docker.io for Docker Hub if empty
