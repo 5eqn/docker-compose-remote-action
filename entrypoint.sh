@@ -100,7 +100,7 @@ fi
 remote_path="\$HOME/$WORKSPACE"
 remote_cleanup=""
 remote_registry_login=""
-docker_prefix="docker compose -f \"$DOCKER_COMPOSE_FILENAME\""
+docker_prefix="docker-compose -f \"$DOCKER_COMPOSE_FILENAME\""
 remote_docker_exec="$docker_prefix pull && $docker_prefix up $DOCKER_ARGS"
 if [ -n "$DOCKER_COMPOSE_PREFIX" ]; then
   remote_docker_exec="$docker_prefix pull && $docker_prefix -p \"$DOCKER_COMPOSE_PREFIX\" up $DOCKER_ARGS"
@@ -129,7 +129,7 @@ tar -C \"$remote_path\" -xjv;
 $remote_cleanup
 $remote_registry_login
 
-log 'Launching docker compose... \"$remote_docker_exec\"';
+log 'Launching docker-compose... \"$remote_docker_exec\"';
 cd \"$remote_path\";
 $DOCKER_ENV $remote_docker_exec"
 
